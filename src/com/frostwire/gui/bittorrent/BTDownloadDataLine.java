@@ -15,39 +15,23 @@
 
 package com.frostwire.gui.bittorrent;
 
+import com.frostwire.gui.library.LibraryMediator;
+import com.frostwire.torrent.PaymentOptions;
+import com.frostwire.transfers.TransferState;
+import com.limegroup.gnutella.gui.*;
+import com.limegroup.gnutella.gui.actions.LimeAction;
+import com.limegroup.gnutella.gui.notify.Notification;
+import com.limegroup.gnutella.gui.notify.NotifyUserProxy;
+import com.limegroup.gnutella.gui.tables.*;
+import com.limegroup.gnutella.settings.iTunesSettings;
+import org.limewire.util.OSUtils;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Icon;
-
-import com.frostwire.transfers.TransferState;
-import org.limewire.util.OSUtils;
-
-import com.frostwire.gui.library.LibraryMediator;
-import com.frostwire.torrent.PaymentOptions;
-import com.limegroup.gnutella.gui.GUIMediator;
-import com.limegroup.gnutella.gui.GUIUtils;
-import com.limegroup.gnutella.gui.I18n;
-import com.limegroup.gnutella.gui.IconManager;
-import com.limegroup.gnutella.gui.iTunesMediator;
-import com.limegroup.gnutella.gui.actions.LimeAction;
-import com.limegroup.gnutella.gui.notify.Notification;
-import com.limegroup.gnutella.gui.notify.NotifyUserProxy;
-import com.limegroup.gnutella.gui.tables.AbstractDataLine;
-import com.limegroup.gnutella.gui.tables.IconAndNameHolder;
-import com.limegroup.gnutella.gui.tables.IconAndNameHolderImpl;
-import com.limegroup.gnutella.gui.tables.LimeTableColumn;
-import com.limegroup.gnutella.gui.tables.ProgressBarHolder;
-import com.limegroup.gnutella.gui.tables.SeedsHolder;
-import com.limegroup.gnutella.gui.tables.SizeHolder;
-import com.limegroup.gnutella.gui.tables.SpeedRenderer;
-import com.limegroup.gnutella.gui.tables.TimeRemainingHolder;
-import com.limegroup.gnutella.settings.iTunesSettings;
 
 /**
  * This class handles all of the data for a single download, representing
@@ -56,7 +40,7 @@ import com.limegroup.gnutella.settings.iTunesSettings;
  * instance.
  */
 final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
-    
+
     private static final String PARTIAL_DOWNLOAD_TEXT = I18n.tr(" (Handpicked)");
 
     /**
@@ -102,23 +86,25 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
     private String _seedToPeerRatio;
 
     private Date dateCreated;
-    
+
     private String license;
 
     private boolean _notification;
 
     private PaymentOptions paymentOptions;
-    
+
     /**
      * Column index for the file name.
      */
     static final int FILE_INDEX = 0;
     private static final LimeTableColumn FILE_COLUMN = new LimeTableColumn(FILE_INDEX, "DOWNLOAD_NAME_COLUMN", I18n.tr("Name"), 201, true, IconAndNameHolder.class);
 
-    /** Column index for name-your-price/tips/donations */
+    /**
+     * Column index for name-your-price/tips/donations
+     */
     static final int PAYMENT_OPTIONS_INDEX = 1;
-    private static final LimeTableColumn PAYMENT_OPTIONS_COLUMN = new LimeTableColumn(PAYMENT_OPTIONS_INDEX, "PAYMENT_OPTIONS_COLUMN", I18n.tr("Tips/Donations"), 65, true, PaymentOptions.class );
-    
+    private static final LimeTableColumn PAYMENT_OPTIONS_COLUMN = new LimeTableColumn(PAYMENT_OPTIONS_INDEX, "PAYMENT_OPTIONS_COLUMN", I18n.tr("Tips/Donations"), 65, true, PaymentOptions.class);
+
     /**
      * Column index for the file size.
      */
@@ -178,7 +164,7 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
 
     static final int LICENSE_INDEX = 15;
     static final LimeTableColumn LICENSE_COLUMN = new LimeTableColumn(LICENSE_INDEX, "LICENSE_COLUMN", I18n.tr("License"), 80, false, String.class);
-    
+
     /**
      * Number of columns to display
      */
@@ -222,8 +208,8 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
      * Must initialize data.
      *
      * @param downloader the <tt>Downloader</tt>
-     *  that provides access to
-     *  information about the download
+     *                   that provides access to
+     *                   information about the download
      */
     public void initialize(BTDownload downloader) {
         super.initialize(downloader);
@@ -250,52 +236,52 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
      */
     public Object getValueAt(int index) {
         switch (index) {
-        case FILE_INDEX:
-            return new IconAndNameHolderImpl(getIcon(), initializer.getDisplayName());
-        case PAYMENT_OPTIONS_INDEX:
-            return paymentOptions;
-        case SIZE_INDEX:
-            if (initializer.isPartialDownload()) {
-                return new SizeHolder(_size, PARTIAL_DOWNLOAD_TEXT);
-            } else {
-                return new SizeHolder(_size);
-            }
-        case STATUS_INDEX:
-            String status = TRANSFER_STATE_STRING_MAP.get(_transferState);
-            if (status == null) {
-                status = I18n.tr("Unknown status");
-            }
-            return status;
-        case PROGRESS_INDEX:
-            return Integer.valueOf(_progress);
-        case BYTES_DOWNLOADED_INDEX:
-            return new SizeHolder(_download);
-        case BYTES_UPLOADED_INDEX:
-            return new SizeHolder(_upload);
-        case DOWNLOAD_SPEED_INDEX:
-            return new Double(_downloadSpeed);
-        case UPLOAD_SPEED_INDEX:
-            return new Double(_uploadSpeed);
-        case TIME_INDEX:
-            if (initializer.isCompleted()) {
-                return new TimeRemainingHolder(0);
-            } else if (_downloadSpeed < 0.001 && !(initializer instanceof BTPeerHttpUpload)) {
-                return new TimeRemainingHolder(-1);
-            } else {
-                return new TimeRemainingHolder(_timeLeft);
-            }
-        case SEEDS_INDEX:
-            return new SeedsHolder(_seeds);
-        case PEERS_INDEX:
-            return _peers;
-        case SHARE_RATIO_INDEX:
-            return _shareRatio;
-        case SEED_TO_PEER_RATIO_INDEX:
-            return _seedToPeerRatio;
-        case DATE_CREATED_INDEX:
-            return dateCreated;
-        case LICENSE_INDEX:
-            return license;
+            case FILE_INDEX:
+                return new IconAndNameHolderImpl(getIcon(), initializer.getDisplayName());
+            case PAYMENT_OPTIONS_INDEX:
+                return paymentOptions;
+            case SIZE_INDEX:
+                if (initializer.isPartialDownload()) {
+                    return new SizeHolder(_size, PARTIAL_DOWNLOAD_TEXT);
+                } else {
+                    return new SizeHolder(_size);
+                }
+            case STATUS_INDEX:
+                String status = TRANSFER_STATE_STRING_MAP.get(_transferState);
+                if (status == null) {
+                    status = I18n.tr("Unknown status");
+                }
+                return status;
+            case PROGRESS_INDEX:
+                return Integer.valueOf(_progress);
+            case BYTES_DOWNLOADED_INDEX:
+                return new SizeHolder(_download);
+            case BYTES_UPLOADED_INDEX:
+                return new SizeHolder(_upload);
+            case DOWNLOAD_SPEED_INDEX:
+                return new Double(_downloadSpeed);
+            case UPLOAD_SPEED_INDEX:
+                return new Double(_uploadSpeed);
+            case TIME_INDEX:
+                if (initializer.isCompleted()) {
+                    return new TimeRemainingHolder(0);
+                } else if (_downloadSpeed < 0.001 && !(initializer instanceof BTPeerHttpUpload)) {
+                    return new TimeRemainingHolder(-1);
+                } else {
+                    return new TimeRemainingHolder(_timeLeft);
+                }
+            case SEEDS_INDEX:
+                return new SeedsHolder(_seeds);
+            case PEERS_INDEX:
+                return _peers;
+            case SHARE_RATIO_INDEX:
+                return _shareRatio;
+            case SEED_TO_PEER_RATIO_INDEX:
+                return _seedToPeerRatio;
+            case DATE_CREATED_INDEX:
+                return dateCreated;
+            case LICENSE_INDEX:
+                return license;
         }
         return null;
     }
@@ -309,38 +295,38 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
 
     static LimeTableColumn staticGetColumn(int idx) {
         switch (idx) {
-        case FILE_INDEX:
-            return FILE_COLUMN;
-        case PAYMENT_OPTIONS_INDEX:
-            return PAYMENT_OPTIONS_COLUMN;
-        case SIZE_INDEX:
-            return SIZE_COLUMN;
-        case STATUS_INDEX:
-            return STATUS_COLUMN;
-        case PROGRESS_INDEX:
-            return PROGRESS_COLUMN;
-        case BYTES_DOWNLOADED_INDEX:
-            return BYTES_DOWNLOADED_COLUMN;
-        case BYTES_UPLOADED_INDEX:
-            return BYTES_UPLOADED_COLUMN;
-        case DOWNLOAD_SPEED_INDEX:
-            return DOWNLOAD_SPEED_COLUMN;
-        case UPLOAD_SPEED_INDEX:
-            return UPLOAD_SPEED_COLUMN;
-        case TIME_INDEX:
-            return TIME_COLUMN;
-        case SEEDS_INDEX:
-            return SEEDS_COLUMN;
-        case PEERS_INDEX:
-            return PEERS_COLUMN;
-        case SHARE_RATIO_INDEX:
-            return SHARE_RATIO_COLUMN;
-        case SEED_TO_PEER_RATIO_INDEX:
-            return SEED_TO_PEER_RATIO_COLUMN;
-        case DATE_CREATED_INDEX:
-            return DATE_CREATED_COLUMN;
-        case LICENSE_INDEX:
-            return LICENSE_COLUMN;
+            case FILE_INDEX:
+                return FILE_COLUMN;
+            case PAYMENT_OPTIONS_INDEX:
+                return PAYMENT_OPTIONS_COLUMN;
+            case SIZE_INDEX:
+                return SIZE_COLUMN;
+            case STATUS_INDEX:
+                return STATUS_COLUMN;
+            case PROGRESS_INDEX:
+                return PROGRESS_COLUMN;
+            case BYTES_DOWNLOADED_INDEX:
+                return BYTES_DOWNLOADED_COLUMN;
+            case BYTES_UPLOADED_INDEX:
+                return BYTES_UPLOADED_COLUMN;
+            case DOWNLOAD_SPEED_INDEX:
+                return DOWNLOAD_SPEED_COLUMN;
+            case UPLOAD_SPEED_INDEX:
+                return UPLOAD_SPEED_COLUMN;
+            case TIME_INDEX:
+                return TIME_COLUMN;
+            case SEEDS_INDEX:
+                return SEEDS_COLUMN;
+            case PEERS_INDEX:
+                return PEERS_COLUMN;
+            case SHARE_RATIO_INDEX:
+                return SHARE_RATIO_COLUMN;
+            case SEED_TO_PEER_RATIO_INDEX:
+                return SEED_TO_PEER_RATIO_COLUMN;
+            case DATE_CREATED_INDEX:
+                return DATE_CREATED_COLUMN;
+            case LICENSE_INDEX:
+                return LICENSE_COLUMN;
         }
         return null;
     }
@@ -413,18 +399,21 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
         _seedToPeerRatio = initializer.getSeedToPeerRatio();
         _size = initializer.getSize();
         dateCreated = initializer.getDateCreated();
-        
-        if (initializer.getCopyrightLicenseBroker() != null && 
-            initializer.getCopyrightLicenseBroker().license != null) {
+
+        if (initializer.getCopyrightLicenseBroker() != null &&
+                initializer.getCopyrightLicenseBroker().license != null) {
             license = initializer.getCopyrightLicenseBroker().license.getName();
         } else {
             license = "";
         }
-        
+
         if (initializer.getPaymentOptions() != null) {
             paymentOptions = initializer.getPaymentOptions();
         }
 
+        if (initializer instanceof BittorrentDownload) {
+            ((BittorrentDownload) initializer).testSequential();
+        }
 
         if (getInitializeObject().isCompleted()) {
             showNotification();
@@ -440,7 +429,7 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
                 Action[] actions = null;
                 File file = getInitializeObject().getSaveLocation();
                 if (file != null) {
-                    actions = new Action[] { new LaunchAction(file), new ShowInLibraryAction(file) };
+                    actions = new Action[]{new LaunchAction(file), new ShowInLibraryAction(file)};
                 }
                 notification = new Notification(theDownload.getDisplayName(), getIcon(), actions);
                 LibraryMediator.instance().getLibraryExplorer().clearDirectoryHolderCaches();
@@ -461,13 +450,13 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
      * Gubatron: iTunes auto scanning hack for non-torrents.
      * This logic was taken from BTDownloadCreator::createDownload(DownloadManager downloadManager, final boolean triggerFilter)
      * in that method, the DownloadManager (azureus) sets up a listener that takes care of this when the torrent download is finished.
-     * 
+     * <p/>
      * With YouTubeItemDownload and SoundcloudTrackDownload I've yet to find the equivalent listeners to move this logic at the end of the
      * download, for now, showNotification is the hack that I have...
      * Suggestion: Use BTDownloadCreator to normalize the initialization of all downloads, and setup there the behavior of the
      * equivalent download managers if they exist, if not we could create listeners, and so all this logic will be maintained
      * in one place.
-     * 
+     *
      * @param theDownload
      * @param file
      */
@@ -478,8 +467,6 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
     }
 
     private final class LaunchAction extends AbstractAction {
-
-        private static final long serialVersionUID = 4020797972200661119L;
 
         private File file;
 
@@ -498,8 +485,6 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
     }
 
     private final class ShowInLibraryAction extends AbstractAction {
-
-        private static final long serialVersionUID = -6177511216279954853L;
 
         private File file;
 

@@ -20,6 +20,7 @@ package com.frostwire.gui.bittorrent;
 
 import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadListener;
+import com.frostwire.bittorrent.BTPlayableItem;
 import com.frostwire.gui.library.LibraryMediator;
 import com.frostwire.logging.Logger;
 import com.frostwire.torrent.CopyrightLicenseBroker;
@@ -34,11 +35,13 @@ import com.limegroup.gnutella.settings.iTunesImportSettings;
 import com.limegroup.gnutella.settings.iTunesSettings;
 import org.gudy.azureus2.core3.torrent.TOTorrent;
 import org.gudy.azureus2.core3.torrent.TOTorrentFactory;
-import org.limewire.util.FileUtils;
 import org.limewire.util.OSUtils;
 
 import java.io.File;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author gubatron
@@ -239,6 +242,16 @@ public class BittorrentDownload implements com.frostwire.gui.bittorrent.BTDownlo
     public CopyrightLicenseBroker getCopyrightLicenseBroker() {
         setupMetadataHolder();
         return licenseBroker;
+    }
+
+    public void testSequential() {
+        if (items.size() == 1) {
+            TransferItem item = items.get(0);
+            if (item instanceof BTPlayableItem) {
+                long n = ((BTPlayableItem) item).getSequentialDownloaded();
+                System.out.println(n);
+            }
+        }
     }
 
     private class StatusListener implements BTDownloadListener {
