@@ -19,8 +19,8 @@
 package com.frostwire.gui.bittorrent;
 
 import com.frostwire.bittorrent.BTDownload;
+import com.frostwire.bittorrent.BTDownloadItem;
 import com.frostwire.bittorrent.BTDownloadListener;
-import com.frostwire.bittorrent.BTPlayableItem;
 import com.frostwire.gui.library.LibraryMediator;
 import com.frostwire.logging.Logger;
 import com.frostwire.torrent.CopyrightLicenseBroker;
@@ -247,9 +247,9 @@ public class BittorrentDownload implements com.frostwire.gui.bittorrent.BTDownlo
     public void testSequential() {
         if (items.size() == 1) {
             TransferItem item = items.get(0);
-            if (item instanceof BTPlayableItem) {
-                long n = ((BTPlayableItem) item).getSequentialDownloaded();
-                System.out.println(n);
+            if (item instanceof BTDownloadItem) {
+                long n = ((BTDownloadItem) item).getSequentialDownloaded();
+                System.out.println(n + "/" + getSize());
             }
         }
     }
