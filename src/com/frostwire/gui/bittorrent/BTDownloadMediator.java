@@ -19,6 +19,7 @@
 package com.frostwire.gui.bittorrent;
 
 import com.frostwire.bittorrent.BTEngine;
+import com.frostwire.core.CommonConstants;
 import com.frostwire.core.FileDescriptor;
 import com.frostwire.gui.bittorrent.BTDownloadActions.PlaySingleMediaFileAction;
 import com.frostwire.gui.components.slides.Slide;
@@ -572,7 +573,8 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
 
         playSingleMediaFileAction.setEnabled(getSelectedDownloaders().length == 1 && hasMediaFiles && isSingleFile);
 
-        removeYouTubeAction.setEnabled(isYouTubeTransfer(dataLine.getInitializeObject()));
+        removeYouTubeAction.setEnabled(isHttpTransfer(dataLine.getInitializeObject()));
+
         BTDownloadActions.REMOVE_TORRENT_ACTION.setEnabled(!isHttpTransfer(dataLine.getInitializeObject()));
         BTDownloadActions.REMOVE_TORRENT_AND_DATA_ACTION.setEnabled(!isHttpTransfer(dataLine.getInitializeObject()));
     }
@@ -834,16 +836,19 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
         if (sr != null) {
             GUIMediator.safeInvokeLater(new Runnable() {
                 public void run() {
-                    if (!isDownloading(sr.getDownloadUrl())) {
-                        BTDownload downloader = new SoundcloudDownload(sr);
-                        add(downloader);
+                    if (isDownloading(sr.getDownloadUrl())) {
+                        DATA_MODEL.remove(sr.getDownloadUrl());
+                        doRefresh();
+                        return;
                     }
+                    BTDownload downloader = new SoundcloudDownload(sr);
+                    add(downloader);
                 }
             });
         } else if (trackUrl != null) {
             //resolve track information using http://api.soundcloud.com/resolve?url=<url>&client_id=b45b1aa10f1ac2941910a7f0d10f8e28
-            final String clientId = "b45b1aa10f1ac2941910a7f0d10f8e28";
-            final String appVersion = "dd9d3970";
+            final String clientId = CommonConstants.SOUNDCLOUD_CLIENTID;
+            final String appVersion = CommonConstants.SOUNDCLOUD_APP_VERSION;
             try {
                 String url = trackUrl;
                 if (trackUrl.contains("?in=")) {

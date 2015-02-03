@@ -53,7 +53,7 @@ Pre-requisites:
 * [Gradle](http://www.gradle.org/)
 * [Git](http://www.git-scm.com/) to clone, check out the project to your machine.
 
-Make sure your **CLASSPATH**, **JAVA_HOME**, **ANT_HOME** and your **PATH** environment variables are set correctly.
+Make sure your `CLASSPATH`, `JAVA_HOME`, `ANT_HOME` and your `PATH` environment variables are set correctly.
 
 Example on a Ubuntu system's .bashrc file:
 
@@ -62,7 +62,7 @@ Example on a Ubuntu system's .bashrc file:
     PATH=${PATH}:${JAVA_HOME}/bin
     export JAVA_HOME CLASSPATH PATH
 
-In some cases, you may need to set the **ANT_HOME** environment variable to the location of your ant binary.
+In some cases, you may need to set the `ANT_HOME` environment variable to the location of your ant binary.
 
 Most build problems are usually solved by having those environment variables set
 correctly. If you are a Windows or Mac user the process is fairly similar.
@@ -172,12 +172,12 @@ _Repeat and rinse, if you send enough patches to demonstrate you have a good
 coding skills, we'll just give you commit access on the real repo and you will
 be part of the development team._
 
-# License
+### License
 
-See [COPYING](LICENSE.txt) for the license. Frostwire for Android is offered under the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html).
+Frostwire Desktop is offered under the [GNU General Public License](http://www.gnu.org/copyleft/gpl.html). Available [here](LICENSE.txt).
 
 
-# Official FrostWire Sites
+### Official FrostWire sites
 
 [Main Website Frostwire.com](http://www.frostwire.com) |
 [Frostwire Forum](http://forum.frostwire.com) |
