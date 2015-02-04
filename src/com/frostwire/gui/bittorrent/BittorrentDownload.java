@@ -22,6 +22,7 @@ import com.frostwire.bittorrent.BTDownload;
 import com.frostwire.bittorrent.BTDownloadItem;
 import com.frostwire.bittorrent.BTDownloadListener;
 import com.frostwire.gui.library.LibraryMediator;
+import com.frostwire.gui.player.MediaPlayer;
 import com.frostwire.logging.Logger;
 import com.frostwire.torrent.CopyrightLicenseBroker;
 import com.frostwire.torrent.PaymentOptions;
@@ -244,12 +245,31 @@ public class BittorrentDownload implements com.frostwire.gui.bittorrent.BTDownlo
         return licenseBroker;
     }
 
-    public void testSequential() {
+    public void checkSequentialDownload() {
         if (items.size() == 1) {
             TransferItem item = items.get(0);
             if (item instanceof BTDownloadItem) {
-                long n = ((BTDownloadItem) item).getSequentialDownloaded();
-                System.out.println(n + "/" + getSize());
+                BTDownloadItem btItem = (BTDownloadItem) item;
+
+                if (MediaPlayer.isPlayableFile(btItem.getFile())) {
+
+                    long downloaded = btItem.getSequentialDownloaded();
+                    long size = btItem.getSize();
+
+                    long percent = (100 * downloaded) / size;
+
+                    if (percent > 30 || downloaded > 5 * 1024 * 1024) {
+                        if (dl.isSequentialDownload()) {
+                            dl.setSequentialDownload(false);
+                        }
+                    } else {
+                        if (!dl.isSequentialDownload()) {
+                            dl.setSequentialDownload(true);
+                        }
+                    }
+
+                    //LOG.debug("Seq: " + dl.isSequentialDownload() + " Downloaded: " + downloaded);
+                }
             }
         }
     }

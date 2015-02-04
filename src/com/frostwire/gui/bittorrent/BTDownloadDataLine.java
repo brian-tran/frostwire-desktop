@@ -414,7 +414,7 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
         }
 
         if (initializer instanceof BittorrentDownload) {
-            ((BittorrentDownload) initializer).testSequential();
+            ((BittorrentDownload) initializer).checkSequentialDownload();
         }
 
         if (getInitializeObject().isCompleted()) {
