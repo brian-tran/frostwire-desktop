@@ -20,21 +20,28 @@ package com.frostwire.gui.bittorrent;
 
 import com.frostwire.JsonEngine;
 import com.frostwire.gui.AlphaIcon;
+import com.frostwire.gui.player.MediaSource;
+import com.frostwire.gui.player.StreamMediaSource;
+import com.frostwire.search.youtube.YouTubeCrawledStreamableSearchResult;
 import com.frostwire.torrent.PaymentOptions;
 import com.frostwire.torrent.PaymentOptions.PaymentMethod;
 import com.frostwire.util.StringUtils;
 import com.frostwire.uxstats.UXAction;
 import com.frostwire.uxstats.UXStats;
+import com.limegroup.gnutella.MediaType;
 import com.limegroup.gnutella.gui.GUIMediator;
 import com.limegroup.gnutella.gui.I18n;
 import com.limegroup.gnutella.gui.search.FWAbstractJPanelTableCellRenderer;
 import com.limegroup.gnutella.gui.tables.TableActionLabel;
+import com.limegroup.gnutella.settings.PlayerSettings;
 import net.miginfocom.swing.MigLayout;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 
 /**
  *
@@ -103,6 +110,12 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
     private void labelPlay_mouseReleased(MouseEvent e) {
         if (dl.canPreview()) {
             System.out.println("preview: " + dl.getPreviewFile());
+            File file = dl.getPreviewFile();
+            if (file != null) {
+                GUIMediator.instance().launchMedia(new MediaSource(file));
+            }
+        } else {
+            System.out.println("NO PREVIEW");
         }
     }
 
