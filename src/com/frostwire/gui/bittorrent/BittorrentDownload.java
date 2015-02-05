@@ -274,6 +274,10 @@ public class BittorrentDownload implements com.frostwire.gui.bittorrent.BTDownlo
                     }
                 }
             }
+        } else {
+            if (dl.isSequentialDownload()) {
+                dl.setSequentialDownload(false);
+            }
         }
     }
 
