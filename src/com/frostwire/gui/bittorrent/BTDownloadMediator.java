@@ -208,44 +208,6 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
     }
 
     /**
-     * Notification that a filter on this panel has changed.
-     * <p/>
-     * Updates the data model with the new list, maintains the selection,
-     * and moves the viewport to the first still visible selected row.
-     */
-    boolean filterChanged() {
-        // store the selection & visible rows
-        int[] rows = TABLE.getSelectedRows();
-        BTDownloadDataLine[] lines = new BTDownloadDataLine[rows.length];
-        List<BTDownloadDataLine> inView = new LinkedList<BTDownloadDataLine>();
-        for (int i = 0; i < rows.length; i++) {
-            int row = rows[i];
-            BTDownloadDataLine line = DATA_MODEL.get(row);
-            lines[i] = line;
-            if (TABLE.isRowVisible(row))
-                inView.add(line);
-        }
-
-        // change the table.
-        DATA_MODEL.filtersChanged();
-
-        // reselect & move the viewpoint to the first still visible row.
-        for (int i = 0; i < rows.length; i++) {
-            BTDownloadDataLine line = lines[i];
-            int row = DATA_MODEL.getRow(line);
-            if (row != -1) {
-                TABLE.addRowSelectionInterval(row, row);
-                if (inView != null && inView.contains(line)) {
-                    TABLE.ensureRowVisible(row);
-                    inView = null;
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Update the splash screen.
      */
     protected void updateSplashScreen() {
@@ -299,14 +261,6 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
         }
 
         clearInactiveAction.setEnabled(anyClearable);
-
-        try {
-            if (OSUtils.isWindows() && UpdateManagerSettings.SHOW_FROSTWIRE_RECOMMENDATIONS.getValue()) {
-                //TipsClient.instance().call();
-            }
-        } catch (Throwable e) {
-            LOG.debug("Error using tips framework: " + e.getMessage());
-        }
     }
 
     public int getActiveDownloads() {
@@ -380,65 +334,6 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
         dloader.remove();
     }
 
-    /**
-     * Launches the selected files in the <tt>Launcher</tt> or in the built-in
-     * media player.
-     */
-    void launchSelectedDownloads() {
-        //        int[] sel = TABLE.getSelectedRows();
-        //        if (sel.length == 0) {
-        //        	return;
-        //        }
-        //        LaunchableProvider[] providers = new LaunchableProvider[sel.length];
-        //        for (int i = 0; i < sel.length; i++) {
-        //        	providers[i] = new DownloaderProvider(DATA_MODEL.get(sel[i]).getDownloader());
-        //        }
-        //        GUILauncher.launch(providers);
-    }
-
-    /**
-     * Pauses all selected downloads.
-     */
-    void pauseSelectedDownloads() {
-        int[] sel = TABLE.getSelectedRows();
-        for (int i = 0; i < sel.length; i++) {
-            DATA_MODEL.get(sel[i]).getInitializeObject().pause();
-        }
-    }
-
-    /**
-     * Launches explorer
-     */
-    void launchExplorer() {
-        int[] sel = TABLE.getSelectedRows();
-        BTDownload dl = DATA_MODEL.get(sel[sel.length - 1]).getInitializeObject();
-        File toExplore = dl.getSaveLocation();
-
-        if (toExplore == null) {
-            return;
-        }
-
-        GUIMediator.launchExplorer(toExplore);
-    }
-
-    FileTransfer[] getSelectedFileTransfers() {
-        int[] sel = TABLE.getSelectedRows();
-        ArrayList<FileTransfer> transfers = new ArrayList<FileTransfer>(sel.length);
-        //    	for (int i = 0; i < sel.length; i++) {
-        //    		DownloadDataLine line = DATA_MODEL.get(sel[i]);
-        //    		Downloader downloader = line.getDownloader();
-        //    		// ignore if save file of complete downloader has already been moved
-        //    		if (downloader.getState() == DownloadStatus.COMPLETE
-        //    				&& !downloader.getSaveFile().exists()) {
-        //    			continue;
-        //    		}
-        //        	if (downloader.isLaunchable()) {
-        //        		transfers.add(line.getFileTransfer());
-        //        	}
-        //    	}
-        return transfers.toArray(new FileTransfer[transfers.size()]);
-    }
-
     public BTDownload[] getSelectedBTDownloads() {
         int[] sel = TABLE.getSelectedRows();
         ArrayList<BTDownload> btdownloadList = new ArrayList<BTDownload>(sel.length);
@@ -449,18 +344,6 @@ public final class BTDownloadMediator extends AbstractTableMediator<BTDownloadRo
             }
         }
         return btdownloadList.toArray(new BTDownload[btdownloadList.size()]);
-    }
-
-    /**
-     * Forces the selected downloads in the download window to resume.
-     */
-    void resumeSelectedDownloads() {
-        int[] sel = TABLE.getSelectedRows();
-        for (int i = 0; i < sel.length; i++) {
-            BTDownloadDataLine dd = DATA_MODEL.get(sel[i]);
-            BTDownload downloader = dd.getInitializeObject();
-            downloader.resume();
-        }
     }
 
     /**
