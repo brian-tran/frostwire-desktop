@@ -491,4 +491,21 @@ public class YouTubeDownload implements BTDownload {
     public boolean canPreview() {
         return true;
     }
+
+    @Override
+    public File getPreviewFile() {
+        if (isComplete()) {
+            return completeFile;
+        } else {
+            if (tempVideo.exists()) {
+                return tempVideo;
+            }
+
+            if (tempAudio.exists()) {
+                return tempAudio;
+            }
+        }
+
+        return null;
+    }
 }

@@ -37,10 +37,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * 
+ *
  * @author gubatron
  * @author aldenml
- * 
+ *
  */
 public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRenderer {
     private final static ImageIcon bitcoin_enabled;
@@ -102,7 +102,7 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
     // play hack
     private void labelPlay_mouseReleased(MouseEvent e) {
         if (dl.canPreview()) {
-            System.out.println("preview");
+            System.out.println("preview: " + dl.getPreviewFile());
         }
     }
 
@@ -150,7 +150,7 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
             t.printStackTrace();
         }
     }
-    
+
     private void openPaymentOptionsURL(PaymentOptions paymentOptions, PaymentMethod method) {
         String paymentOptionsUrl = null;
         if (method == PaymentMethod.PAYPAL && !StringUtils.isNullOrEmpty(paymentOptions.paypalUrl)) {
@@ -159,7 +159,7 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
             String paymentOptionsJSON = StringUtils.encodeUrl(new JsonEngine().toJson(paymentOptions).replaceAll("\n", ""));
             String title = StringUtils.encodeUrl(paymentOptions.getItemName());
             paymentOptionsUrl = "http://www.frostwire.com/tips/?method=" + method.toString() + "&po=" + paymentOptionsJSON + "&title=" + title;
-            
+
         }
         GUIMediator.openURL(paymentOptionsUrl);
     }
