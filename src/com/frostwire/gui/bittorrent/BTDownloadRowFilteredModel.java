@@ -1,3 +1,18 @@
+/*
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 package com.frostwire.gui.bittorrent;
 
 import java.util.ArrayList;
@@ -11,12 +26,13 @@ import com.limegroup.gnutella.settings.BittorrentSettings;
 /**
  * Filters out certain rows from the data model.
  *
- * @author Sumeet Thadani, Sam Berlin, Gubatron
- * 
+ * @author Sumeet Thadani
+ * @author Sam Berlin
+ * @author gubatron
+ * @author aldenml
+ *
  */
 public class BTDownloadRowFilteredModel extends BTDownloadModel {
-
-    private static final long serialVersionUID = -581151930850193368L;
 
     /**
      * The filter to use in this row filter.
