@@ -256,19 +256,22 @@ public class BittorrentDownload implements com.frostwire.gui.bittorrent.BTDownlo
                     long downloaded = btItem.getSequentialDownloaded();
                     long size = btItem.getSize();
 
-                    long percent = (100 * downloaded) / size;
+                    if (size > 0) {
 
-                    if (percent > 30 || downloaded > 5 * 1024 * 1024) {
-                        if (dl.isSequentialDownload()) {
-                            dl.setSequentialDownload(false);
+                        long percent = (100 * downloaded) / size;
+
+                        if (percent > 30 || downloaded > 5 * 1024 * 1024) {
+                            if (dl.isSequentialDownload()) {
+                                dl.setSequentialDownload(false);
+                            }
+                        } else {
+                            if (!dl.isSequentialDownload()) {
+                                dl.setSequentialDownload(true);
+                            }
                         }
-                    } else {
-                        if (!dl.isSequentialDownload()) {
-                            dl.setSequentialDownload(true);
-                        }
+
+                        //LOG.debug("Seq: " + dl.isSequentialDownload() + " Downloaded: " + downloaded);
                     }
-
-                    //LOG.debug("Seq: " + dl.isSequentialDownload() + " Downloaded: " + downloaded);
                 }
             }
         }
