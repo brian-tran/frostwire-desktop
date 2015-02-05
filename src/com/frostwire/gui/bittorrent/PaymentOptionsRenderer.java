@@ -19,6 +19,7 @@
 package com.frostwire.gui.bittorrent;
 
 import com.frostwire.JsonEngine;
+import com.frostwire.gui.AlphaIcon;
 import com.frostwire.torrent.PaymentOptions;
 import com.frostwire.torrent.PaymentOptions.PaymentMethod;
 import com.frostwire.util.StringUtils;
@@ -51,6 +52,11 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
     private final TableActionLabel labelBitcoin;
     private final TableActionLabel labelPaypal;
 
+    // play hack
+    private final static ImageIcon play_solid;
+    private JLabel labelPlay;
+    private BTDownload dl;
+
     //mutable
     private PaymentOptions paymentOptions;
 
@@ -60,6 +66,9 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
 
         paypal_enabled = GUIMediator.getThemeImage("paypal_enabled");
         paypal_disabled = GUIMediator.getThemeImage("paypal_disabled");
+
+        // play hack
+        play_solid = GUIMediator.getThemeImage("search_result_play_over");
     }
 
     public PaymentOptionsRenderer() {
@@ -76,14 +85,33 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
         labelBitcoin.setToolTipText(I18n.tr("Name your price, Send a Tip or Donation in") +" "+ I18n.tr("bitcoins"));
         labelPaypal.setToolTipText(I18n.tr("Name your price, Send a Tip or Donation via Paypal"));
 
+        // play hack
+        labelPlay = new JLabel(play_solid);
+        labelPlay.setToolTipText(I18n.tr("Play/Preview"));
+        labelPlay.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                labelPlay_mouseReleased(e);
+            }
+        });
+
         initMouseListeners();
         initComponentsLayout();
     }
 
+    // play hack
+    private void labelPlay_mouseReleased(MouseEvent e) {
+        if (dl.canPreview()) {
+            System.out.println("preview");
+        }
+    }
+
     private void initComponentsLayout() {
-        setLayout(new MigLayout("gap 2px, fillx, center, insets 5px 5px 5px 5px", "[20px!][20px!]"));
+        // play hack
+        setLayout(new MigLayout("gap 2px, fillx, center, insets 5px 5px 5px 5px", "[20px!][20px!][20px!]"));
         add(labelBitcoin, "width 20px!, growx 0, aligny top, push");
         add(labelPaypal, "width 20px!, growx 0, aligny top, push");
+        add(labelPlay, "width 20px!, growx 0, aligny top, push");
     }
 
     private void initMouseListeners() {
@@ -113,6 +141,11 @@ public final class PaymentOptionsRenderer extends FWAbstractJPanelTableCellRende
 
             labelBitcoin.updateActionIcon(gotPaymentOptions && !StringUtils.isNullOrEmpty(paymentOptions.bitcoin), showSolid);
             labelPaypal.updateActionIcon(gotPaymentOptions && !StringUtils.isNullOrEmpty(paymentOptions.paypalUrl), showSolid);
+
+            // play hack
+            if (value instanceof BTDownload) {
+                dl = (BTDownload) value;
+            }
         } catch (Throwable t) {
             t.printStackTrace();
         }

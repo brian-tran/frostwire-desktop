@@ -483,4 +483,9 @@ public class SoundcloudDownload implements BTDownload {
         return null;
     }
 
+    @Override
+    public boolean canPreview() {
+        return true;
+    }
+
 }

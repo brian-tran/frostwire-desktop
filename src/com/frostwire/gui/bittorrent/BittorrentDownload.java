@@ -245,6 +245,37 @@ public class BittorrentDownload implements com.frostwire.gui.bittorrent.BTDownlo
         return licenseBroker;
     }
 
+    @Override
+    public boolean canPreview() { // TODO: DRY refactor
+        if (items.size() == 1) {
+            TransferItem item = items.get(0);
+            if (item instanceof BTDownloadItem) {
+                BTDownloadItem btItem = (BTDownloadItem) item;
+
+                if (MediaPlayer.isPlayableFile(btItem.getFile())) {
+
+                    long downloaded = btItem.getSequentialDownloaded();
+                    long size = btItem.getSize();
+
+                    if (size > 0) {
+
+                        long percent = (100 * downloaded) / size;
+
+                        if (percent > 30 || downloaded > 5 * 1024 * 1024) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+
+                        //LOG.debug("Seq: " + dl.isSequentialDownload() + " Downloaded: " + downloaded);
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public void checkSequentialDownload() {
         if (items.size() == 1) {
             TransferItem item = items.get(0);

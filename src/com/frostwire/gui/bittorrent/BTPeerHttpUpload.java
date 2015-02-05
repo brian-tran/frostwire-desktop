@@ -180,4 +180,9 @@ public class BTPeerHttpUpload implements BTDownload {
     public CopyrightLicenseBroker getCopyrightLicenseBroker() {
         return null;
     }
+
+    @Override
+    public boolean canPreview() {
+        return false;
+    }
 }

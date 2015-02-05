@@ -178,6 +178,11 @@ public class TorrentFetcherDownload implements BTDownload {
         return null;
     }
 
+    @Override
+    public boolean canPreview() {
+        return false;
+    }
+
     private void cancel() {
         state = TransferState.CANCELED;
         GUIMediator.safeInvokeLater(new Runnable() {

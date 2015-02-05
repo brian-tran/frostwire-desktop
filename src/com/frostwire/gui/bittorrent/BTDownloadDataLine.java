@@ -241,7 +241,8 @@ final class BTDownloadDataLine extends AbstractDataLine<BTDownload> {
             case FILE_INDEX:
                 return new IconAndNameHolderImpl(getIcon(), initializer.getDisplayName());
             case PAYMENT_OPTIONS_INDEX:
-                return paymentOptions;
+                // play hack
+                return getInitializeObject();//paymentOptions;
             case SIZE_INDEX:
                 if (initializer.isPartialDownload()) {
                     return new SizeHolder(_size, PARTIAL_DOWNLOAD_TEXT);

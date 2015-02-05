@@ -53,11 +53,6 @@ public class PaymentOptions extends AbstractMappable<String, Map<String, String>
     
     public String itemName;
 
-    public PaymentOptions() {
-        bitcoin = null;
-        paypalUrl = null;
-    }
-
     public PaymentOptions(String bitcoin, String paypal) {
         this.bitcoin = bitcoin;
         this.paypalUrl = paypal;
